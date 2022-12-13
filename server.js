@@ -1,7 +1,7 @@
 const express = require("express");
 require("dotenv").config();
 const cors = require("cors");
-const connection  = require("./config/db");
+const connection = require("./config/db");
 const { userRouter } = require("./Routes/user.route");
 
 const PORT = process.env.PORT || 8000;
@@ -12,6 +12,15 @@ app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Welcome to api home page");
+});
+
+app.post("/calculateEMI", (req, res) => {
+  const { loanAmount, intrestRate, tenureMonth } = req.body;
+  const calculatedEMI =
+    (loanAmount * intrestRate * (1 + intrestRate) * tenureMonth) /
+    ((1 + intrestRate) * tenureMonth - 1);
+
+  res.send({ EMI: calculatedEMI });
 });
 
 app.use("/user", userRouter);
